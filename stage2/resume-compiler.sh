@@ -94,11 +94,6 @@ readonly INFO_FULL="$DIR_WORK/data_full.info"
 # The file we will have our new bookmarks in.
 readonly INFO_BOOKMARKS="$DIR_WORK/data_bookmarks.info"
 
-# BookmarkBegin
-# BookmarkTitle: Education &amp; Extracurricular activities
-# BookmarkLevel: 1
-# BookmarkPageNumber: 100
-
 rm -rf "$DIR_WORK"
 mkdir "$DIR_WORK"
 
