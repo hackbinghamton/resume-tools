@@ -42,6 +42,7 @@ $ clasp create --title "ResumeExtractor"
 $ clasp push
 ```
 - From the [Apps Script UI](https://script.google.com/), run the script.
+  - The entrypoint is the `main` function in `Main.gs`.
   - Chances are, there will be some back and forth of fixing issues with the script.
 - Download the two ZIPs from the configured output folder.
 
