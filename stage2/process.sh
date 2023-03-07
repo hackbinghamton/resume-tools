@@ -40,6 +40,7 @@ readonly ARC_ORIG="original_resumes.zip"
 readonly ARC_CONV="converted_resumes.zip"
 
 readonly BOOK="../resume_book.pdf"
+readonly COVER_PAGE="/home/koopa/Pictures/Account Assets/HackBU/rb_cover.pdf"
 
 # BookmarkBegin
 # BookmarkTitle: Education &amp; Extracurricular activities
@@ -116,6 +117,10 @@ sed -i "/$BEGIN_MARKER/,/$END_MARKER/ { /$BEGIN_MARKER/ { p; r data_bookmarks.in
 }; /$END_MARKER/p; d }" data_full.info
 
 pdftk "$BOOK" update_info data_full.info output temp.pdf verbose
+mv temp.pdf "$BOOK"
+
+printf "Prepending cover...\n"
+pdftk "$COVER_PAGE" "$BOOK" cat output temp.pdf verbose
 mv temp.pdf "$BOOK"
 
 cd -
