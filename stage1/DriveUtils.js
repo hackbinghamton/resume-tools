@@ -16,15 +16,7 @@ function getFolderByName_(parentFolder, name) {
 function getFolderByPath_(parentFolder, path) {
   let childFolder = parentFolder;
   for (const component of path) {
-    try {
-      childFolder = getFolderByName_(childFolder, component);
-    } catch (e) {
-      if (e instanceof EntityNotFound) {
-        return null;
-      } else {
-        throw e;
-      }
-    }
+    childFolder = getFolderByName_(childFolder, component);
   }
   return childFolder;
 }
