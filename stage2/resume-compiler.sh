@@ -28,6 +28,7 @@ remove_blank_pages() {
 assert_dir_nonempty() {
     if [ -z "$(ls -A "$1")" ]; then
         printf "Directory %s is unexpectedly empty. Quitting.\n" "$1" >&2
+        exit 1
     fi
 }
 
