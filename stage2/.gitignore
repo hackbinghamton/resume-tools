@@ -1,0 +1,5 @@
+in/*
+!in/.gitkeep
+work
+patches.sh
+*.pdf
