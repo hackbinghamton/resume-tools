@@ -39,11 +39,15 @@ assert_dir_nonempty() {
     fi
 }
 
-readonly ARC_ORIG="original_resumes.zip"
-readonly ARC_CONV="converted_resumes.zip"
+readonly DIR_IN="./in"
+assert_dir_nonempty "$DIR_IN"
 
+readonly ARC_ORIG="$DIR_IN/original_resumes.zip"
 assert_file_exists "$ARC_ORIG"
+readonly ARC_CONV="$DIR_IN/converted_resumes.zip"
 assert_file_exists "$ARC_CONV"
+readonly COVER_PAGE="$DIR_IN/cover_page.pdf"
+assert_file_exists "$COVER_PAGE"
 
 readonly DIR_OUT="./out"
 readonly DIR_ORIG="$DIR_OUT/orig"
@@ -51,7 +55,6 @@ readonly DIR_CONV="$DIR_OUT/conv"
 readonly DIR_COMP="$DIR_OUT/comp"
 
 readonly BOOK="../resume_book.pdf"
-readonly COVER_PAGE="/home/koopa/Pictures/Account Assets/HackBU/rb_cover.pdf"
 
 # BookmarkBegin
 # BookmarkTitle: Education &amp; Extracurricular activities
