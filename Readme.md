@@ -67,3 +67,10 @@ The goal of the second stage of processing is to sensibly combine all of the res
   $ ./resume-compiler.sh
   ```
   - To restrict each resume to one page, pass the `-1` argument.
+
+You also might find yourself wanting to distribute the `comp` folder:
+
+```
+$ cd work/comp
+$ zip ../../all_pdf *
+```
