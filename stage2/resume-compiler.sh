@@ -25,6 +25,13 @@ remove_blank_pages() {
     fi
 }
 
+assert_file_exists() {
+    if [ ! -f "$1" ]; then
+        printf "File %s doesn't exist. Quitting.\n" "$1" >&2
+        exit 1
+    fi
+}
+
 assert_dir_nonempty() {
     if [ -z "$(ls -A "$1")" ]; then
         printf "Directory %s is unexpectedly empty. Quitting.\n" "$1" >&2
@@ -32,13 +39,16 @@ assert_dir_nonempty() {
     fi
 }
 
+readonly ARC_ORIG="original_resumes.zip"
+readonly ARC_CONV="converted_resumes.zip"
+
+assert_file_exists "$ARC_ORIG"
+assert_file_exists "$ARC_CONV"
+
 readonly DIR_OUT="./out"
 readonly DIR_ORIG="$DIR_OUT/orig"
 readonly DIR_CONV="$DIR_OUT/conv"
 readonly DIR_COMP="$DIR_OUT/comp"
-
-readonly ARC_ORIG="original_resumes.zip"
-readonly ARC_CONV="converted_resumes.zip"
 
 readonly BOOK="../resume_book.pdf"
 readonly COVER_PAGE="/home/koopa/Pictures/Account Assets/HackBU/rb_cover.pdf"
