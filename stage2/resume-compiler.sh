@@ -86,6 +86,13 @@ assert_dir_nonempty "$DIR_CONV"
 
 printf "Fixing corrupt PDF...\n"
 
+if [ -f ./patches.sh ]; then
+    cd "$DIR_ORIG"
+    # shellcheck source=stage2/patches.sh
+    . ../../patches.sh
+    cd -
+fi
+
 printf "Removing blank pages...\n"
 
 for f in "$DIR_ORIG"/*.pdf "$DIR_CONV"/*; do
