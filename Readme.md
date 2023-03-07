@@ -29,18 +29,18 @@ Once this stage is finished, we have:
   - If you would like to associate the Apps Script with a Google Cloud Project, then you instead want to log into clasp using an account within the same domain as the GCP. It also seems that your account needs to be able to modify the GCP, so that clasp can set up permissions.
     - Wanting to use `clasp run` would be one reason to go this route, in which case the account you authorize through OAuth is the account that must be able to access the form in resume data. For the easiest time, consider using one Google Account which manages the GCP, has access to the Apps Script, and has access to the form and resume data.
 - Make a copy of the configuraton:
-```
-$ cp Config.template.js Config.js
-```
+  ```
+  $ cp Config.template.js Config.js
+  ```
 - Fill out the template file.
 - Create a new Apps Script project:
-```
-$ clasp create --title "ResumeExtractor"
-```
+  ```
+  $ clasp create --title "ResumeExtractor"
+  ```
 - Push the script from this repo, to Google:
-```
-$ clasp push
-```
+  ```
+  $ clasp push
+  ```
 - From the [Apps Script UI](https://script.google.com/), run the script.
   - The entrypoint is the `main` function in `Main.gs`.
   - Chances are, there will be some back and forth of fixing issues with the script.
@@ -63,7 +63,7 @@ The goal of the second stage of processing is to sensibly combine all of the res
 - Save the two ZIP archives to the input directory `in`.
 - Provide your own cover page for the resume book, as `in/cover_page.pdf`
 - Run the script:
-```
-$ ./resume-compiler.sh
-```
+  ```
+  $ ./resume-compiler.sh
+  ```
   - To restrict each resume to one page, pass the `-1` argument.
