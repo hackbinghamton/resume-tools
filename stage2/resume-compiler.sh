@@ -51,7 +51,9 @@ assert_file_exists "$COVER_PAGE"
 
 readonly DIR_WORK="./work"
 readonly DIR_ORIG="$DIR_WORK/orig"
+# Note that this is assumed to be two directories below the start. (see (**))
 readonly DIR_CONV="$DIR_WORK/conv"
+# Note that this is hardcoded into the awk command below.
 readonly DIR_COMP="$DIR_WORK/comp"
 
 # Work-in-progress book PDF.
@@ -109,7 +111,10 @@ printf "Stripping blank pages...\n"
 
 printf "Compiling resume book...\n"
 
-output_info=$(pdftk "$DIR_COMP"/*.pdf cat output "$PDF_WORK" verbose | tee /dev/tty)
+# Temporarily cd so that we have predictable paths for our awk command (**).
+cd "$DIR_COMP"
+output_info=$(pdftk ./*.pdf cat output "../../$PDF_WORK" verbose | tee /dev/tty)
+cd -
 
 printf "Ripping PDF info...\n"
 
