@@ -59,7 +59,7 @@ readonly PDF_WORK="$DIR_WORK/work.pdf"
 # Temporary file that immediately gets copied to the work file.
 readonly PDF_TEMP="$DIR_WORK/temp.pdf"
 # Final book PDF.
-readonly PDF_BOOK="$DIR_WORK/book.pdf"
+readonly PDF_BOOK="./book.pdf"
 
 # The working area for the PDF metadata.
 readonly INFO_FULL="$DIR_WORK/data_full.info"
