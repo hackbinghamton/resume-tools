@@ -49,20 +49,30 @@ assert_file_exists "$ARC_CONV"
 readonly COVER_PAGE="$DIR_IN/cover_page.pdf"
 assert_file_exists "$COVER_PAGE"
 
-readonly DIR_OUT="./out"
-readonly DIR_ORIG="$DIR_OUT/orig"
-readonly DIR_CONV="$DIR_OUT/conv"
-readonly DIR_COMP="$DIR_OUT/comp"
+readonly DIR_WORK="./work"
+readonly DIR_ORIG="$DIR_WORK/orig"
+readonly DIR_CONV="$DIR_WORK/conv"
+readonly DIR_COMP="$DIR_WORK/comp"
 
-readonly BOOK="../resume_book.pdf"
+# Work-in-progress book PDF.
+readonly PDF_WORK="$DIR_WORK/work.pdf"
+# Temporary file that immediately gets copied to the work file.
+readonly PDF_TEMP="$DIR_WORK/temp.pdf"
+# Final book PDF.
+readonly PDF_BOOK="$DIR_WORK/book.pdf"
+
+# The working area for the PDF metadata.
+readonly INFO_FULL="$DIR_WORK/data_full.info"
+# The file we will have our new bookmarks in.
+readonly INFO_BOOKMARKS="$DIR_WORK/data_bookmarks.info"
 
 # BookmarkBegin
 # BookmarkTitle: Education &amp; Extracurricular activities
 # BookmarkLevel: 1
 # BookmarkPageNumber: 100
 
-rm -rf "$DIR_OUT"
-mkdir "$DIR_OUT"
+rm -rf "$DIR_WORK"
+mkdir "$DIR_WORK"
 
 printf "Unpacking archives...\n"
 
@@ -88,17 +98,15 @@ mkdir "$DIR_COMP"
 ln -s "$(pwd)"/"$DIR_ORIG"/*.pdf "$(pwd)"/"$DIR_CONV"/* "$DIR_COMP"
 assert_dir_nonempty "$DIR_CONV"
 
-cd "$DIR_COMP"
-
 printf "Stripping blank pages...\n"
 
 printf "Compiling resume book...\n"
 
-output_info=$(pdftk ./*.pdf cat output "$BOOK" verbose | tee /dev/tty)
+output_info=$(pdftk "$DIR_COMP"/*.pdf cat output "$PDF_WORK" verbose | tee /dev/tty)
 
 printf "Ripping PDF info...\n"
 
-pdftk "$BOOK" dump_data output data_full.info verbose
+pdftk "$PDF_WORK" dump_data output "$INFO_FULL" verbose
 
 printf "Generating new bookmarks...\n"
 
@@ -120,21 +128,21 @@ printf "%s\n" "$output_info" | awk '\
             print "BookmarkLevel: 1"
             printf("BookmarkPageNumber: %d\n", page)
         }
-    }' >data_bookmarks.info
+    }' >$INFO_BOOKMARKS
 
 printf "Replacing PDF bookmarks...\n"
 
 # Thanks: https://superuser.com/a/440057/738724
 readonly BEGIN_MARKER="^NumberOfPages"
 readonly END_MARKER="^PageMediaBegin"
-sed -i "/$BEGIN_MARKER/,/$END_MARKER/ { /$BEGIN_MARKER/ { p; r data_bookmarks.info
-}; /$END_MARKER/p; d }" data_full.info
+sed -i "/$BEGIN_MARKER/,/$END_MARKER/ { /$BEGIN_MARKER/ { p; r $INFO_BOOKMARKS
+}; /$END_MARKER/p; d }" "$INFO_FULL"
 
-pdftk "$BOOK" update_info data_full.info output temp.pdf verbose
-mv temp.pdf "$BOOK"
+pdftk "$PDF_WORK" update_info "$INFO_FULL" output "$PDF_TEMP" verbose
+mv "$PDF_TEMP" "$PDF_WORK"
 
 printf "Prepending cover...\n"
-pdftk "$COVER_PAGE" "$BOOK" cat output temp.pdf verbose
-mv temp.pdf "$BOOK"
+pdftk "$COVER_PAGE" "$PDF_WORK" cat output temp.pdf verbose
+mv temp.pdf "$PDF_WORK"
 
-cd -
+mv "$PDF_WORK" "$PDF_BOOK"
