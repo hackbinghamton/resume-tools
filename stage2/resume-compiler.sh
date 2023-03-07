@@ -14,8 +14,29 @@ assert_file_exists() {
     fi
 }
 
+only_keep_pages() {
+    pdf="$1"
+    keep_pages="$2"
+
+    set -f
+    # shellcheck disable=SC2086
+    pdftk "$pdf" cat $keep_pages output temp.pdf verbose
+    set +f
+    mv temp.pdf "$pdf"
+}
+
+keep_first_page() {
+    pdf="$1"
+
+    num_pages=$(pdfinfo "$pdf" | grep -Po 'Pages:\s+\K\d')
+
+    if [ "$num_pages" -gt 1 ]; then
+        only_keep_pages "$pdf" "1"
+    fi
+}
+
 # Originally based on https://superuser.com/a/1307895/738724.
-remove_blank_pages() {
+keep_nonblank_pages() {
     pdf="$1"
 
     # Execute the PDF using Ghostscript, outputting to the ink coverage device.
@@ -31,13 +52,18 @@ remove_blank_pages() {
     num_non_blank_pages=$(echo "$non_blank_pages" | wc -w)
 
     if [ "$num_pages" -ne "$num_non_blank_pages" ]; then
-        set -f
-        # shellcheck disable=SC2086
-        pdftk "$pdf" cat $non_blank_pages output temp.pdf verbose
-        set +f
-        mv temp.pdf "$pdf"
+        only_keep_pages "$pdf" "$non_blank_pages"
     fi
 }
+
+set +u
+if [ "$1" = "-1" ]; then
+    echo ONE PAGE
+    one_page=true
+else
+    one_page=false
+fi
+set -u
 
 readonly DIR_IN="./in"
 assert_dir_nonempty "$DIR_IN"
@@ -95,10 +121,14 @@ if [ -f ./patches.sh ]; then
     cd -
 fi
 
-printf "Removing blank pages...\n"
+printf "Performing per-resume processing...\n"
 
 for f in "$DIR_ORIG"/*.pdf "$DIR_CONV"/*; do
-    remove_blank_pages "$f"
+    if [ "$one_page" = true ]; then
+        keep_first_page "$f"
+    else
+        keep_nonblank_pages "$f"
+    fi
 done
 
 printf "Linking PDFs...\n"

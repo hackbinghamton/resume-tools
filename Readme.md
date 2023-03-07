@@ -65,3 +65,4 @@ The goal of the second stage of processing is to sensibly combine all of the res
 ```
 $ ./resume-compiler.sh
 ```
+  - To restrict each resume to one page, pass the `-1` argument.
