@@ -1,5 +1,19 @@
 #!/bin/sh -eu
 
+assert_dir_nonempty() {
+    if [ -z "$(ls -A "$1")" ]; then
+        printf "Directory %s is unexpectedly empty. Quitting.\n" "$1" >&2
+        exit 1
+    fi
+}
+
+assert_file_exists() {
+    if [ ! -f "$1" ]; then
+        printf "File %s doesn't exist. Quitting.\n" "$1" >&2
+        exit 1
+    fi
+}
+
 # Originally based on https://superuser.com/a/1307895/738724.
 remove_blank_pages() {
     pdf="$1"
@@ -22,20 +36,6 @@ remove_blank_pages() {
         pdftk "$pdf" cat $non_blank_pages output temp.pdf verbose
         set +f
         mv temp.pdf "$pdf"
-    fi
-}
-
-assert_file_exists() {
-    if [ ! -f "$1" ]; then
-        printf "File %s doesn't exist. Quitting.\n" "$1" >&2
-        exit 1
-    fi
-}
-
-assert_dir_nonempty() {
-    if [ -z "$(ls -A "$1")" ]; then
-        printf "Directory %s is unexpectedly empty. Quitting.\n" "$1" >&2
-        exit 1
     fi
 }
 
