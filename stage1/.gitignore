@@ -1,0 +1,9 @@
+# Non-sensitive (but specific) project info.
+.clasp.json*
+# Downloaded Google OAuth credentials.
+creds.json*
+# Processed Google login info.
+.clasprc.json*
+
+# Sensitive data of our own
+Config.js*
