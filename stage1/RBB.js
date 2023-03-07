@@ -42,49 +42,6 @@ function processForm_(form, knownNames, knownEmails, origBlobs, convBlobs) {
   }
 }
 
-//
-// OVERVIEW
-//
-// This script does the following:
-//  - Enumerates the responses to each of the configured forms.
-//  - Filters out respondents who have opted out of sharing their resume.
-//  - Applies arbitrary transformation to names, such as:
-//    - Trimming leading and trailing whitespace.
-//    - Specifying full names where the respondent only put their first name.
-//    - Correctly capitalizing names that have been recorded in all-lowercase.
-//      - Extra capitalization is kept, as this can be the product of cultural differences.
-//        For instance, French surnames are often recorded in all-uppercase.
-//        In any case, it should be consistent with what their resume does.
-//  - Collects the original resume file for each person.
-//  - Converts the resume files to PDF wherever necessary.
-//  - Produces an archive of the original resume set, and the converted resume step.
-//
-// USAGE
-//
-//  - Setup a configuration from the template.
-//  - Run the script (if broken, fix it and rerun).
-//  - Download the two ZIPs.
-//  - Extract each of the two ZIPs into their own folders.
-//  - Fix any corrupted PDFs.
-//    - Once, someone uploaded a DOCX with a PDF extension, which this script can't cope with.
-//  - Create a third folder comprised of:
-//    - Only the PDFs from the original files.
-//    - All of the converted files.
-//  - In the third folder, merge the PDFs: `pdftk *.pdf cat output ../resume_book.pdf verbose`
-//  - Apply any further transformations such as:
-//    - Filtering out empty pages (see separate script).
-//    - Prepending a cover page(s).
-//    - Clearing the table of contents.
-//
-// KNOWN ISSUES
-//
-//  - Conversion from DOCX, DOTX, and DOC to PDF will create a temporary file.
-//    We do immediately trash it, but you should probably be aware of this.
-//  - We redo the conversions every run. This script could be optimized by saving them in a folder.
-//  - The archive is pretty big; at scale, I would be worried about runnning into the 6-minute time-out.
-//
-
-// don't forget to empty your trash
 function main() {
   // Initialize blob arrays (see FormUtils.gs for conversion info).
 
@@ -118,7 +75,7 @@ function main() {
   if (origBlobs.length === 0) {
     throw new Error('No blobs found to archive.');
   }
-  console.info('Archiving original files...');
+  console.info('Archiving original files...'); // TODO count
   const origZipBlob = Utilities.zip(origBlobs, 'original_resumes.zip');
   outputFolder.createFile(origZipBlob);
   if (convBlobs.length !== 0) {
